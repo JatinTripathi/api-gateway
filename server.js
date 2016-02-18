@@ -7,6 +7,7 @@ var path=require('path');
 var bodyParser=require('body-parser');
 var flash=require('flash');
 var passportInit=require('./passport/init');
+var mongo=require('mongoose');
 
 
 
@@ -20,7 +21,7 @@ app.use(express.static(path.join(__dirname,'public')));
 
 
 //==================db config=================//
-
+mongo.connect('mongodb://localhost/passport');
 
 
 //==============view config==================//
@@ -28,7 +29,7 @@ app.set('views',path.join(__dirname,'views'));
 app.set('view engine','jade');
 
 
-//==============passport init=================//
+//==============passport config=================//
 app.use(session({secret:'authen',saveUninitialized:true,resave:true}));
 app.use(flash());
 app.use(passport.initialize());
@@ -36,7 +37,7 @@ app.use(passport.session());
 passportInit(passport);
 
 
-//==============routes====================//
+//==============ROUTES====================//
 app.get('/',function(req,res){
    res.render('signin',{message:req.flash('message')});
 });

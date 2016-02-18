@@ -1,6 +1,6 @@
 var users=require('../models/userColl');
-var signupStrategy=require('./passport/signup');
-var loginStrategies=require('./passport/login');
+var signupStrategy=require('./signup');
+var loginStrategies=require('./login');
 
 
 module.exports=function(passport){
@@ -8,7 +8,7 @@ module.exports=function(passport){
         console.log('Serializing user: '+user);
         done(null,user.Email);
     });
-    
+
     passport.deserializeUser(function(id,done){
         users.findbyId(id,function(err,user){
             if(err) throw err;

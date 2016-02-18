@@ -6,9 +6,8 @@ var session=require('express-session');
 var path=require('path');
 var bodyParser=require('body-parser');
 var flash=require('flash');
-var loginStrategies=require('./passport/login');
 var passportInit=require('./passport/init');
-var signupStrategy=require('./passport/signup');
+
 
 
 //==============express config================//
@@ -35,14 +34,6 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 passportInit(passport);
-
-
-//==============login strategies===============//
-loginStrategies(passport);
-
-
-//==============signup strategies============//
-signupStrategy(passport);
 
 
 //==============routes====================//

@@ -9,6 +9,7 @@
   "author": "jatin tripathi",
   "license": "ISC",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.0",
     "cookie-parser": "1.4.1",
     "debug": "^2.2.0",
@@ -16,6 +17,8 @@
     "express-session": "^1.13.0",
     "flash": "^1.1.0",
     "jade": "^1.11.0",
+    "mongodb": "^2.1.7",
+    "mongoose": "^4.4.3",
     "morgan": "^1.6.1",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0"

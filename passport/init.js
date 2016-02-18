@@ -1,4 +1,7 @@
 var users=require('../models/userColl');
+var signupStrategy=require('./passport/signup');
+var loginStrategies=require('./passport/login');
+
 
 module.exports=function(passport){
     passport.serializeUser(function(user,done){
@@ -13,4 +16,6 @@ module.exports=function(passport){
             done(err,user);
         });
     });
+    loginStrategies(passport);
+    signupStrategy(passport);
 };

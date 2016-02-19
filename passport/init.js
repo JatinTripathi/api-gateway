@@ -1,6 +1,6 @@
 var users=require('../models/userColl');
 var signupStrategy=require('./signup');
-var loginStrategies=require('./login');
+var loginStrategy=require('./signin');
 
 
 module.exports=function(passport){
@@ -16,6 +16,6 @@ module.exports=function(passport){
             done(err,user);
         });
     });
-    loginStrategies(passport);
+    loginStrategy(passport);
     signupStrategy(passport);
 };

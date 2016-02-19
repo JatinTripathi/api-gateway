@@ -1,3 +1,5 @@
+var verification=require('./verification');
+
 module.exports=function(mailgun,req){
 
   var apiKey='key-42e20f5a90e601ebbdb9a52d8164733a';

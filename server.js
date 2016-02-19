@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname,'public')));
 
 
 //==================db config=================//
-mongo.connect('mongodb://localhost:27017/passport');
+
 
 
 //==============view config==================//
@@ -42,29 +42,28 @@ passportInit(passport);
 app.get('/',function(req,res){
    res.render('signin',{message:req.flash('message')});
 });
-app.get('/signup',function(req,res){
-  res.render('signup',{message:req.flash('message')});
-});
+
 app.post('/signin',passport.authenticate('login',{
   successRedirect:'/home',
   failureRedirect:'/',
-  failurFlash:true
-}));
-app.post('/signup',passport.authenticate('signup',{
-  successRedirect:'/home',
-  failurRedirect:'/signup',
-  failurFlash:true
-}));
-app.get('/sumbmit/:email',function(req,res){
-  mailer(mailgun);
-  mailgun.messages().send(data,function(err,body){
-    if(err) throw err;
-    else{
-      res.render('home',{email:req.param.email})
-    }
-  });
+  failurFlash:true}));
+
+app.get('/signup',function(req,res){
+  res.render('signup',{message:req.flash('message')});
 });
 
+app.post('/submit/:email',passport.authenticate('signup',{
+  failurRedirect:'/signup',
+  failurFlash:true}),
+  function(req,res){
+    mailer(mailgun,req);
+    mailgun.messages().send(data,function(err,body){
+      if(err) throw err;
+      else{
+        res.render('err',{email:req.param.email});
+      }
+  }
+);
 
 //===============port config==============//
 var port=process.env.port || 8080;

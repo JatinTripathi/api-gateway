@@ -1,0 +1,21 @@
+signup.jade
+  input(type='text', name='username', class='form-control', placeholder='Username',required, autofocus)
+
+
+home.jade
+  li Username ---> #{user.username}
+
+server.js
+  ,
+  function(req,res){
+    mailer(mailgun,req);
+    mailgun.messages().send(data,function(err,body){
+      if(err) throw err;
+      else{
+        res.render('home',{email:req.param.Email});
+      }
+  });
+  });
+
+server.js
+mongo.connect('mongodb://localhost:27017/authen');

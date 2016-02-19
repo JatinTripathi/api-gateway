@@ -9,7 +9,7 @@ var flash=require('flash');
 var passportInit=require('./passport/init');
 var mongo=require('mongoose');
 var mailer=require('./mailgun/index');
-var mailgun=require('mailgun');
+var mailgun=require('mailgun-js');
 
 
 //==============express config================//
@@ -52,18 +52,26 @@ app.get('/signup',function(req,res){
   res.render('signup',{message:req.flash('message')});
 });
 
-app.post('/submit/:email',passport.authenticate('signup',{
-  failurRedirect:'/signup',
-  failurFlash:true}),
+app.post('/signup/:email',passport.authenticate('signup',{
+  successRedirect: '/home',
+  failureRedirect:'/',
+  failureFlash:true}),
   function(req,res){
     mailer(mailgun,req);
     mailgun.messages().send(data,function(err,body){
       if(err) throw err;
       else{
-        res.render('err',{email:req.param.email});
+        res.render('home',{email:req.param.Email});
       }
   });
 });
+
+app.get('/home',function(req,res){
+  res.render('home',{user:req.user});
+});
+
+
+
 
 //===============port config==============//
 var port=process.env.port || 8080;

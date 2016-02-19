@@ -8,7 +8,8 @@ var bodyParser=require('body-parser');
 var flash=require('flash');
 var passportInit=require('./passport/init');
 var mongo=require('mongoose');
-
+var mailer=require('./mailgun/index');
+var mailgun=require('mailgun');
 
 
 //==============express config================//
@@ -53,7 +54,16 @@ app.post('/signup',passport.authenticate('signup',{
   successRedirect:'/home',
   failurRedirect:'/signup',
   failurFlash:true
-}))
+}));
+app.get('/sumbmit/:email',function(req,res){
+  mailer(mailgun);
+  mailgun.messages().send(data,function(err,body){
+    if(err) throw err;
+    else{
+      res.render('home',{email:req.param.email})
+    }
+  });
+});
 
 
 //===============port config==============//

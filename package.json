@@ -17,6 +17,7 @@
     "express-session": "^1.13.0",
     "flash": "^1.1.0",
     "jade": "^1.11.0",
+    "mailgun-js": "^0.7.7",
     "mongodb": "^2.1.7",
     "mongoose": "^4.4.3",
     "morgan": "^1.6.1",

@@ -62,8 +62,8 @@ app.post('/submit/:email',passport.authenticate('signup',{
       else{
         res.render('err',{email:req.param.email});
       }
-  }
-);
+  });
+});
 
 //===============port config==============//
 var port=process.env.port || 8080;

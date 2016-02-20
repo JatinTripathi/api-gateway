@@ -4,11 +4,11 @@ var bcrypt=require('bcrypt-nodejs');
 
 module.exports=function(passport){
 //==================local strategy======================//
-    passport.use('login',
+    passport.use('signin',
     new localStrategy({passReqToCallback:true},
-    function(req,Email,password,done){
+    function(req,email,password,done){
        
-        users.findOne({'Email':Email},function(err,user){
+        users.findOne({'email':email},function(err,user){
            
            if(err) throw err;
            

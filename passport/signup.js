@@ -4,22 +4,22 @@ var bCrypt=require('bcrypt-nodejs');
 
 module.exports=function(passport){
 
-    passport.use('signup',new localStrategy({passReqToCallback:true},function(req,Email,password,done){
+    passport.use('signup',new localStrategy({passReqToCallback:true},function(req,email,password,done){
 
         var findOrCreateUser=function(){
             users.findOne({'email':email},function(err,user){
-                if(err) throw asdfg;
+                if(err) throw err;
                 if(user){
                     console.log('oops! User already exist in our database (console.log)');
                     return done(null,false,req.flash('message','User already exist (message flash)'));
                 }
                 else{
-                    var newUser=new user();
+                    var newUser=new users();
                     newUser.email=req.param('email');
                     newUser.password=createHash('password');
                     newUser.firstName=req.param('firstName');
                     newUser.lastName=req.param('lastName');
-
+                    
                     newUser.save(function(err){
                         if(err) throw err;
                         console.log('Wohoo! You are a part of us now.');

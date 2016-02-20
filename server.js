@@ -8,8 +8,7 @@ var bodyParser=require('body-parser');
 var flash=require('flash');
 var passportInit=require('./passport/init');
 var mongo=require('mongoose');
-var mailer=require('./mailgun/index');
-var mailgun=require('mailgun-js');
+var Mailgun=require('mailgun-js');
 
 
 //==============express config================//
@@ -43,7 +42,7 @@ app.get('/',function(req,res){
    res.render('signin',{message:req.flash('message')});
 });
 
-app.post('/signin',passport.authenticate('login',{
+app.post('/signin',passport.authenticate('signin',{
   successRedirect:'/home',
   failureRedirect:'/',
   failurFlash:true}));
@@ -55,21 +54,11 @@ app.get('/signup',function(req,res){
 app.post('/signup/:email',passport.authenticate('signup',{
   successRedirect: '/home',
   failureRedirect:'/',
-  failureFlash:true}),
-  function(req,res){
-    mailer(mailgun,req);
-    mailgun.messages().send(data,function(err,body){
-      if(err) throw err;
-      else{
-        res.render('home',{email:req.param.Email});
-      }
-  });
-});
+  failureFlash:true}));
 
 app.get('/home',function(req,res){
   res.render('home',{user:req.user});
 });
-
 
 
 

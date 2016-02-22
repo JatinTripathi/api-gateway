@@ -11,6 +11,12 @@ var mongo=require('mongoose');
 var Mailgun=require('mailgun-js');
 
 
+//=================Mailgun Credentials===========//
+var apiKey='key-42e20f5a90e601ebbdb9a52d8164733a';
+var domainName='sandbox2dbe16208a5c4ca993c7d563adcac177.mailgun.org';
+var sender='pratap.jatintripathi@gmail.com';
+
+
 //==============express config================//
 var app=express();
 app.use(logger('combine'));
@@ -57,6 +63,21 @@ app.post('/signup',passport.authenticate('signup',{
   failureFlash:true}));
 
 app.get('/home',function(req,res){
+  var mailer=new Mailgun({apikey:apiKey,domain:domainName});
+  
+  var data={
+    from:sender,
+    to:req.body.email,
+    subject:'Verification Mail',
+    html:'Hey, you trying my application hah. Alright then <a href="http://0.0.0.0:3030/home?' + req.params.mail + '">Click Here to authenticate your account</a>'
+  };
+  
+  mailer.message().send(data,function(err,body){
+    if(err) throw err;
+    else{
+      console.log('Sent Verification Mail');
+    }
+  });
   res.render('home',{user:req.user});
 });
 

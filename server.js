@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname,'public')));
 
 
 //==================db config=================//
-mongo.connect('mongodb://localhost:27017/test');
+mongo.connect('mongodb://localhost:27017/authen');
 
 
 //==============view config==================//

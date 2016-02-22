@@ -4,7 +4,7 @@ var bCrypt=require('bcrypt-nodejs');
 
 module.exports=function(passport){
 
-    passport.use('signup',new localStrategy({passReqToCallback:true},function(req,email,password,done){
+    passport.use('signup',new localStrategy({usernameField:'email',passwordField:'password',passReqToCallback:true},function(req,email,password,done){
 
         var findOrCreateUser=function(){
             users.findOne({'email':email},function(err,user){
@@ -15,10 +15,10 @@ module.exports=function(passport){
                 }
                 else{
                     var newUser=new users();
-                    newUser.email=req.param('email');
-                    newUser.password=createHash('password');
-                    newUser.firstName=req.param('firstName');
-                    newUser.lastName=req.param('lastName');
+                    newUser.email=email;
+                    newUser.password=createHash(password);
+                    newUser.firstName=req.body.firstName;
+                    newUser.lastName=req.body.lastName;
 
                     newUser.save(function(err){
                         if(err) throw err;

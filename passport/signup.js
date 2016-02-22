@@ -1,4 +1,4 @@
-var localStrategy=require('passport-local');
+var localStrategy=require('passport-local').Strategy;
 var users=require('../models/userColl');
 var bCrypt=require('bcrypt-nodejs');
 
@@ -19,7 +19,7 @@ module.exports=function(passport){
                     newUser.password=createHash('password');
                     newUser.firstName=req.param('firstName');
                     newUser.lastName=req.param('lastName');
-                    
+
                     newUser.save(function(err){
                         if(err) throw err;
                         console.log('Wohoo! You are a part of us now.');

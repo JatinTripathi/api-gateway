@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname,'public')));
 
 
 //==================db config=================//
-
+mongo.connect('mongodb://localhost:27017/test');
 
 
 //==============view config==================//
@@ -51,7 +51,7 @@ app.get('/signup',function(req,res){
   res.render('signup',{message:req.flash('message')});
 });
 
-app.post('/signup/:email',passport.authenticate('signup',{
+app.post('/signup',passport.authenticate('signup',{
   successRedirect: '/home',
   failureRedirect:'/',
   failureFlash:true}));
@@ -60,6 +60,9 @@ app.get('/home',function(req,res){
   res.render('home',{user:req.user});
 });
 
+app.get('/error',function(req,res){
+  res.render('error');
+});
 
 
 //===============port config==============//

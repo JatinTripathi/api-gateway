@@ -1,5 +1,4 @@
 var express=require('express');
-var logger=require('morgan');
 var cookieParser=require('cookie-parser');
 var passport=require('passport');
 var session=require('express-session');
@@ -9,6 +8,8 @@ var flash=require('flash');
 var passportInit=require('./passport/init');
 var mongo=require('mongoose');
 var Mailgun=require('mailgun-js');
+var logger=require('./log/logging.js');
+var morgan=require('morgan');
 
 
 //=================Mailgun Credentials===========//
@@ -19,11 +20,12 @@ var sender='pratap.jatintripathi@gmail.com';
 
 //==============express config================//
 var app=express();
-app.use(logger('combine'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname,'public')));
+logger.debugger("Overriding 'Express' logger");
+app.use(morgan('combine',{'stream':logger.stream}));
 
 
 //==================db config=================//
@@ -63,21 +65,22 @@ app.post('/signup',passport.authenticate('signup',{
   failureFlash:true}));
 
 app.get('/home',function(req,res){
-  var mailer=new Mailgun({apikey:apiKey,domain:domainName});
   
+//mailgun verification mail setup
+  var mailer=new Mailgun({apikey:apiKey,domain:domainName});
   var data={
     from:sender,
     to:req.body.email,
     subject:'Verification Mail',
     html:'Hey, you trying my application hah. Alright then <a href="http://0.0.0.0:3030/home?' + req.params.mail + '">Click Here to authenticate your account</a>'
   };
-  
   mailer.message().send(data,function(err,body){
     if(err) throw err;
     else{
       console.log('Sent Verification Mail');
     }
   });
+  
   res.render('home',{user:req.user});
 });
 

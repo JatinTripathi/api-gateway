@@ -12,11 +12,6 @@ var logger=require('./log/logging.js');
 var morgan=require('morgan');
 
 
-//=================Mailgun Credentials===========//
-var apiKey='key-42e20f5a90e601ebbdb9a52d8164733a';
-var domainName='sandbox2dbe16208a5c4ca993c7d563adcac177.mailgun.org';
-var sender='pratap.jatintripathi@gmail.com';
-
 
 //==============express config================//
 var app=express();
@@ -24,12 +19,16 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname,'public')));
-logger.debugger("Overriding 'Express' logger");
+
+//==logging
 app.use(morgan('combine',{'stream':logger.stream}));
+logger.debug("Overriding 'Express' logger");
+
 
 
 //==================db config=================//
 mongo.connect('mongodb://localhost:27017/authen');
+
 
 
 //==============view config==================//
@@ -37,12 +36,21 @@ app.set('views',path.join(__dirname,'views'));
 app.set('view engine','jade');
 
 
+
 //==============passport config=================//
 app.use(session({secret:'authen',saveUninitialized:true,resave:true}));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-passportInit(passport);
+passportInit(passport,logger);
+
+
+
+//=================Mailgun Credentials===========//
+var apiKey='key-42e20f5a90e601ebbdb9a52d8164733a';
+var domainName='sandbox2dbe16208a5c4ca993c7d563adcac177.mailgun.org';
+var sender='pratap.jatintripathi@gmail.com';
+
 
 
 //==============ROUTES====================//
@@ -89,7 +97,8 @@ app.get('/error',function(req,res){
 });
 
 
+
 //===============port config==============//
 var port=process.env.port || 8080;
 app.listen(port);
-console.log('Server is listening at port '+port+'!');
+logger.info('Server is listening at port '+port+'!');

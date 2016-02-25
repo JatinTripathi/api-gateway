@@ -2,7 +2,7 @@ var localStrategy=require('passport-local').Strategy;
 var users=require('../models/userColl');
 var bcrypt=require('bcrypt-nodejs');
 
-module.exports=function(passport){
+module.exports=function(passport,logger){
 //==================local strategy======================//
     passport.use('signin',
     new localStrategy({passReqToCallback:true},
@@ -10,7 +10,7 @@ module.exports=function(passport){
 
         users.findOne({'email':email},function(err,user){
 
-           if(err) throw err;
+           if(err) logger.debug('Some error in finding emails');
 
            if(!user){
               console.log('E-mail ID is not registered');

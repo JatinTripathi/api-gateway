@@ -7,13 +7,14 @@ var logger=new (winston.Logger)({
             level:'info',
             handleExpection:true,
             colorize:true
-            
+
         }),
-        new (winston.transports.Console)({
+        new (winston.transports.File)({
             level:'debug',
             handleException:true,
+            filename:'logfiles.log',
             colorize:true
-        })],    
+        })],
     exitonErrors:false
     });
 

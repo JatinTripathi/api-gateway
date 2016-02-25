@@ -10,6 +10,7 @@ var mongo=require('mongoose');
 var Mailgun=require('mailgun-js');
 var logger=require('./log/logging.js');
 var morgan=require('morgan');
+var mongoSession=require('connect-mongo')(session);
 
 
 
@@ -20,9 +21,20 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname,'public')));
 
-//==logging
+//================logging
 app.use(morgan('combine',{'stream':logger.stream}));
 logger.debug("Overriding 'Express' logger");
+
+//================middleware
+app.use(function(req,res,next){
+  var views=req.session.views;
+  if(!views){views=req.session.views={};}
+  else{
+    var pathname=parseurl(req).pathname;
+    views[pathname]=(views[pathname]||0)+1;
+  }
+  next();
+});
 
 
 
@@ -38,10 +50,21 @@ app.set('view engine','jade');
 
 
 //==============passport config=================//
-app.use(session({secret:'authen',saveUninitialized:true,resave:true}));
+app.use(express.session({
+    secret:'authentication',
+    saveUninitialized:true,
+    resave:true,
+    store:new mongoSession({
+        mongooseConnection:mongo.connection,
+        db:'test',
+        collection:'sessions',
+        autoRemove:'disabled',
+    })
+}));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(passport.authenticate('rememberMe'));
 passportInit(passport,logger);
 
 
@@ -55,7 +78,7 @@ var sender='pratap.jatintripathi@gmail.com';
 
 //==============ROUTES====================//
 app.get('/',function(req,res){
-   res.render('signin',{message:req.flash('message')});
+   res.render('signin',{message:req.flash('req.session.views['/']'+'time')});
 });
 
 app.post('/signin',passport.authenticate('signin',{
@@ -73,7 +96,7 @@ app.post('/signup',passport.authenticate('signup',{
   failureFlash:true}));
 
 app.get('/home',function(req,res){
-  
+
 //mailgun verification mail setup
   var mailer=new Mailgun({apikey:apiKey,domain:domainName});
   var data={
@@ -88,7 +111,7 @@ app.get('/home',function(req,res){
       console.log('Sent Verification Mail');
     }
   });
-  
+
   res.render('home',{user:req.user});
 });
 

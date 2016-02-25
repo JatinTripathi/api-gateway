@@ -1,6 +1,7 @@
 var users=require('../models/userColl');
 var signinStrategy=require('./signin');
 var signupStrategy=require('./signup');
+var rememberMeStrategy=require('./rememberMe');
 
 
 module.exports=function(passport){
@@ -18,4 +19,5 @@ module.exports=function(passport){
     });
     signinStrategy(passport);
     signupStrategy(passport);
+    rememberMeStrategy(passport,logger);
 };

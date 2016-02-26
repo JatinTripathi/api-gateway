@@ -50,7 +50,7 @@ app.set('view engine','jade');
 
 
 //==============passport config=================//
-app.use(express.session({
+app.use(session({
     secret:'authentication',
     saveUninitialized:true,
     resave:true,

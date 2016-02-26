@@ -1,8 +1,8 @@
-var remember=require('passport-remember-me');
+var remember=require('passport-remember-me').Strategy;
 
 module.exports=function(passport,logger){
   passport.use('rememberMe',
-  new rememberMeStrategy(
+  new remember(
     function(token,done){
       Token.consume(token,function(err,user){
         if(err) logger.debug(err);

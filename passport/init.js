@@ -4,7 +4,7 @@ var signupStrategy=require('./signup');
 var rememberMeStrategy=require('./rememberMe');
 
 
-module.exports=function(passport){
+module.exports=function(passport,logger){
     passport.serializeUser(function(user,done){
         console.log('Serializing user: '+user);
         done(null,user.id);

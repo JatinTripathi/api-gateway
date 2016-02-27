@@ -1,6 +1,7 @@
 var localStrategy=require('passport-local').Strategy;
 var users=require('../models/userColl');
 var bCrypt=require('bcrypt-nodejs');
+var shortid=require('shortid');
 
 module.exports=function(passport){
 
@@ -15,6 +16,7 @@ module.exports=function(passport){
                 }
                 else{
                     var newUser=new users();
+                    newUser.id=shortid.generate();
                     newUser.email=email;
                     newUser.password=createHash(password);
                     newUser.firstName=req.body.firstName;

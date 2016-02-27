@@ -25,6 +25,7 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "passport-remember-me": "0.0.1",
+    "shortid": "^2.2.4",
     "winston": "^2.1.1"
   }
 }

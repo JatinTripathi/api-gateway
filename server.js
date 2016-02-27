@@ -11,6 +11,7 @@ var Mailgun=require('mailgun-js');
 var logger=require('./log/logging.js');
 var morgan=require('morgan');
 var mongoSession=require('connect-mongo')(session);
+var url=require('url');
 
 
 
@@ -24,17 +25,6 @@ app.use(express.static(path.join(__dirname,'public')));
 //================logging
 app.use(morgan('combine',{'stream':logger.stream}));
 logger.debug("Overriding 'Express' logger");
-
-//================middleware
-app.use(function(req,res,next){
-  var views=req.session.views;
-  if(!views){views=req.session.views={};}
-  else{
-    var pathname=parseurl(req).pathname;
-    views[pathname]=(views[pathname]||0)+1;
-  }
-  next();
-});
 
 
 
@@ -66,6 +56,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate('rememberMe'));
 passportInit(passport,logger);
+
+//================middleware(pageViews)
+app.use(function(req,res,next){
+  var views=req.session.views;
+  if(!views){views=req.session.views={};}
+  else{
+    var pathname=url.parse(req.url).pathname;
+    views[pathname]=(views[pathname]||0)+1;
+  }
+  next();
+});
 
 
 

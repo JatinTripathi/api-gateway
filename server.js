@@ -4,7 +4,7 @@ var passport=require('passport');
 var session=require('express-session');
 var path=require('path');
 var bodyParser=require('body-parser');
-var flash=require('flash');
+var flash=require('connect-flash');
 var passportInit=require('./passport/init');
 var mongo=require('mongoose');
 var Mailgun=require('mailgun-js');
@@ -40,22 +40,25 @@ app.set('view engine','jade');
 
 
 //==============passport config=================//
+//================middleware(session)
 app.use(session({
     secret:'authentication',
     saveUninitialized:true,
     resave:true,
     store:new mongoSession({
         mongooseConnection:mongo.connection,
-        db:'test',
+        db:'local',
         collection:'sessions',
         autoRemove:'disabled',
     })
 }));
-app.use(flash());
+
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(passport.authenticate('rememberMe'));
 passportInit(passport,logger);
+app.use(passport.authenticate('rememberMe'));
+app.use(flash());
+
 
 //================middleware(pageViews)
 app.use(function(req,res,next){
@@ -68,6 +71,14 @@ app.use(function(req,res,next){
   next();
 });
 
+
+
+//================middleware(isAuthenticated)
+var isAutenticated=function(req,res,next){
+  if(req.isAuthenticated())
+    return next();
+  res.redirect('/');
+};
 
 
 //=================Mailgun Credentials===========//
@@ -84,7 +95,7 @@ app.get('/',function(req,res){
 
 app.post('/signin',passport.authenticate('signin',{
   successRedirect:'/home',
-  failureRedirect:'/',
+  failureRedirect:'/signup',
   failurFlash:true}));
 
 app.get('/signup',function(req,res){
@@ -96,23 +107,7 @@ app.post('/signup',passport.authenticate('signup',{
   failureRedirect:'/',
   failureFlash:true}));
 
-app.get('/home',function(req,res){
-
-//mailgun verification mail setup
-  var mailer=new Mailgun({apikey:apiKey,domain:domainName});
-  var data={
-    from:sender,
-    to:req.body.email,
-    subject:'Verification Mail',
-    html:'Hey, you trying my application hah. Alright then <a href="http://0.0.0.0:3030/home?' + req.params.mail + '">Click Here to authenticate your account</a>'
-  };
-  mailer.message().send(data,function(err,body){
-    if(err) throw err;
-    else{
-      console.log('Sent Verification Mail');
-    }
-  });
-
+app.get('/home',isAutenticated,function(req,res){
   res.render('home',{user:req.user});
 });
 
@@ -120,6 +115,10 @@ app.get('/error',function(req,res){
   res.render('error');
 });
 
+app.get('/signout',function(req,res){
+  req.logout();
+  res.redirect('/');
+});
 
 
 //===============port config==============//

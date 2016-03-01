@@ -1,7 +1,6 @@
 var localStrategy=require('passport-local').Strategy;
 var users=require('../models/userColl');
 var bCrypt=require('bcrypt-nodejs');
-var shortid=require('shortid');
 
 module.exports=function(passport){
 
@@ -16,21 +15,20 @@ module.exports=function(passport){
                 }
                 else{
                     var newUser=new users();
-                    newUser.id=shortid.generate();
                     newUser.email=email;
                     newUser.password=createHash(password);
                     newUser.firstName=req.body.firstName;
                     newUser.lastName=req.body.lastName;
-
+                       
                     newUser.save(function(err){
                         if(err) throw err;
                         console.log('Wohoo! You are a part of us now.');
-                    return done(null,newUser);
+                        return done(null,newUser);
                     });
                 }
             });
         };
-
+     
         process.nextTick(findOrCreateUser);
 
     }));

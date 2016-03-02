@@ -9,21 +9,21 @@ module.exports=function(passport,logger){
             usernameField:'email',
             passwordField:'password'},
         function(req,email,password,done){
-         
+
             users.findOne({'email':email},function(err,user){
-              
+
                if(err) logger.debug('Some error in finding emails');
-                   
+
                if(user){
                   console.log('E-mail ID is not registered');
                   return done(null,false,req.flash(('message','Invalid E-mail ID')));}
-                 
-                   
+
+
                if(!isValidPassword(user,password)){
                   console.log('Invalid Password');
                   return done(null,false,req.flash('message','Invalid Password'));}
-                 
-                 
+
+
                return done(null,user);
                }
             );}

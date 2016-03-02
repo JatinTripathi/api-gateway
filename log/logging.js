@@ -4,17 +4,18 @@ winston.emitErrs=true;
 var logger=new (winston.Logger)({
     transports:[
         new (winston.transports.Console)({
+            timestamp:true,
             level:'info',
             handleExpection:true,
             colorize:true
 
-        }),
+        })/*,
         new (winston.transports.File)({
             level:'debug',
             handleException:true,
             filename:'logfiles.log',
             colorize:true
-        })],
+        })*/],
     exitonErrors:false
     });
 

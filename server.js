@@ -7,11 +7,11 @@ var bodyParser=require('body-parser');
 var flash=require('connect-flash');
 var passportInit=require('./passport/init');
 var mongo=require('mongoose');
-var Mailgun=require('mailgun-js');
 var logger=require('./log/logging.js');
 var morgan=require('morgan');
 var mongoSession=require('connect-mongo')(session);
 var url=require('url');
+var Mailgun=require('mailgun-js');
 
 
 
@@ -21,15 +21,14 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname,'public')));
-
 //================logging
-app.use(morgan('combine',{'stream':logger.stream}));
+app.use(morgan(':method :url :status :response-time ms - :res[content-length]',{'stream':logger.stream}));
 logger.debug("Overriding 'Express' logger");
 
 
 
 //==================db config=================//
-mongo.connect('mongodb://localhost:27017/authen');
+//mongo.connect('mongodb://localhost:27017/authen');
 
 
 
@@ -39,7 +38,6 @@ app.set('view engine','jade');
 
 
 
-//==============passport config=================//
 //================middleware(session)
 app.use(session({
     secret:'authentication',
@@ -52,12 +50,13 @@ app.use(session({
         autoRemove:'disabled',
     })
 }));
-
+//==============passport config=================//
 app.use(passport.initialize());
 app.use(passport.session());
 passportInit(passport,logger);
 app.use(passport.authenticate('rememberMe'));
 app.use(flash());
+
 
 
 //================middleware(pageViews)
@@ -74,11 +73,21 @@ app.use(function(req,res,next){
 
 
 //================middleware(isAuthenticated)
-var isAutenticated=function(req,res,next){
+var isAuthenticated=function(req,res,next){
   if(req.isAuthenticated())
     return next();
   res.redirect('/');
 };
+
+
+
+//=================middleware(ifAthenticated)
+var ifAuthenticated=function(req,res,next){
+  if(req.isAuthenticated())
+    res.redirect('/home');
+  return next();
+};
+
 
 
 //=================Mailgun Credentials===========//
@@ -88,8 +97,8 @@ var sender='pratap.jatintripathi@gmail.com';
 
 
 
-//==============ROUTES====================//
-app.get('/',function(req,res){
+//================Index Routes=====================//
+app.get('/',ifAuthenticated,function(req,res){
    res.render('signin',{message:req.flash('req.session.views['/']'+'time')});
 });
 
@@ -107,7 +116,7 @@ app.post('/signup',passport.authenticate('signup',{
   failureRedirect:'/',
   failureFlash:true}));
 
-app.get('/home',isAutenticated,function(req,res){
+app.get('/home',isAuthenticated,function(req,res){
   res.render('home',{user:req.user});
 });
 
@@ -119,6 +128,7 @@ app.get('/signout',function(req,res){
   req.logout();
   res.redirect('/');
 });
+
 
 
 //===============port config==============//

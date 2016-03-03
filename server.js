@@ -12,6 +12,8 @@ var morgan=require('morgan');
 var mongoSession=require('connect-mongo')(session);
 var url=require('url');
 var Mailgun=require('mailgun-js');
+var proxy=require('http-proxy');
+var apiProxy=proxy.createProxyServer();
 
 
 
@@ -127,6 +129,18 @@ app.get('/error',function(req,res){
 app.get('/signout',function(req,res){
   req.logout();
   res.redirect('/');
+});
+
+
+
+//===============Proxy Server Routing==============//
+//=====End Points Address
+var editor='http://localhost:8081';
+
+//=====End Points Routing
+app.all('/editor/*',isAuthenticated,function(req,res){
+  logger.info('Transferring To Editor Microservice');
+  apiProxy.web(req,res,{target:editor});
 });
 
 

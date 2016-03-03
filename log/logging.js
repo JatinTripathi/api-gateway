@@ -9,13 +9,13 @@ var logger=new (winston.Logger)({
             handleExpection:true,
             colorize:true
 
-        })/*,
+        }),
         new (winston.transports.File)({
             level:'debug',
             handleException:true,
-            filename:'logfiles.log',
+            filename:'./log/logfiles.log',
             colorize:true
-        })*/],
+        })],
     exitonErrors:false
     });
 

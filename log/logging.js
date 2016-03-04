@@ -6,13 +6,13 @@ var logger=new (winston.Logger)({
         new (winston.transports.Console)({
             timestamp:true,
             level:'info',
-            handleExpection:true,
+            handleExceptions:true,
             colorize:true
 
         }),
         new (winston.transports.File)({
             level:'debug',
-            handleException:true,
+            handleExceptions:true,
             filename:'./log/logfiles.log',
             colorize:true
         })],

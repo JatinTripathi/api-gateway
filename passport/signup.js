@@ -1,6 +1,15 @@
 var localStrategy=require('passport-local').Strategy;
 var users=require('../models/userColl');
 var bCrypt=require('bcrypt-nodejs');
+var Mailgun=require('mailgun-js');
+
+
+//=================Mailgun Credentials===========//
+var apiKey='key-42e20f5a90e601ebbdb9a52d8164733a';
+var domainName='sandbox2dbe16208a5c4ca993c7d563adcac177.mailgun.org';
+var sender='pratap.jatintripathi@gmail.com';
+
+
 
 module.exports=function(passport){
 
@@ -22,8 +31,12 @@ module.exports=function(passport){
                        
                     newUser.save(function(err){
                         if(err) throw err;
-                        console.log('Wohoo! You are a part of us now.');
+                        console.log('New Signup of '+users.email);
                         return done(null,newUser);
+                    
+                    //
+                    //mailgun
+                    //
                     });
                 }
             });

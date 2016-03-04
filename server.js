@@ -11,9 +11,7 @@ var logger=require('./log/logging.js');
 var morgan=require('morgan');
 var mongoSession=require('connect-mongo')(session);
 var url=require('url');
-var Mailgun=require('mailgun-js');
 var proxy=require('http-proxy');
-var apiProxy=proxy.createProxyServer();
 
 
 
@@ -30,7 +28,7 @@ logger.debug("Overriding 'Express' logger");
 
 
 //==================db config=================//
-//mongo.connect('mongodb://localhost:27017/authen');
+mongo.connect('mongodb://localhost:27017/authen');
 
 
 
@@ -92,13 +90,6 @@ var ifAuthenticated=function(req,res,next){
 
 
 
-//=================Mailgun Credentials===========//
-var apiKey='key-42e20f5a90e601ebbdb9a52d8164733a';
-var domainName='sandbox2dbe16208a5c4ca993c7d563adcac177.mailgun.org';
-var sender='pratap.jatintripathi@gmail.com';
-
-
-
 //================Index Routes=====================//
 app.get('/',ifAuthenticated,function(req,res){
    res.render('signin',{message:req.flash('req.session.views['/']'+'time')});
@@ -134,13 +125,22 @@ app.get('/signout',function(req,res){
 
 
 //===============Proxy Server Routing==============//
+var apiProxy=proxy.createProxyServer();
+
 //=====End Points Address
 var editor='http://localhost:8081';
+var search='http://localhost:8983';
 
 //=====End Points Routing
 app.all('/editor/*',isAuthenticated,function(req,res){
   logger.info('Transferring To Editor Microservice');
   apiProxy.web(req,res,{target:editor});
+});
+
+app.all('/search/*',isAuthenticated,function(req,res){
+  logger.info('Transferring To Search Microservice');
+  //Persistent websocket connetion to search service
+  apiProxy.ws(req,res,{target:search});
 });
 
 

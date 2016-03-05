@@ -132,17 +132,26 @@ var editor='http://localhost:8081';
 var search='http://localhost:8983';
 
 //=====End Points Routing
+//Editor Microservice
 app.all('/editor/*',isAuthenticated,function(req,res){
   logger.info('Transferring To Editor Microservice');
   apiProxy.web(req,res,{target:editor});
 });
 
+app.post('/publish',function(req,res,next){
+  logger.info('Transferring to editor microservise for publishing');
+  apiProxy.web(req,res,{target:editor});
+  next();
+}),function(req,res){
+  res.redirect('/home');
+};
+
+//Search Microservice
 app.all('/search/*',isAuthenticated,function(req,res){
   logger.info('Transferring To Search Microservice');
   //Persistent websocket connetion to search service
   apiProxy.ws(req,res,{target:search});
 });
-
 
 
 //===============port config==============//

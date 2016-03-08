@@ -1,3 +1,3 @@
-FROM node:4-onbuild
+FROM node:latest
 
 EXPOSE 8080

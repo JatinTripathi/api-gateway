@@ -28,7 +28,7 @@ logger.debug("Overriding 'Express' logger");
 
 
 //==================db config=================//
-mongo.connect('mongodb://localhost:27017/authen');
+mongo.connect('mongodb://mongo:27017/authen');
 
 
 

@@ -14,7 +14,7 @@ module.exports=function(passport,logger){
 
                if(err) logger.debug('Some error in finding emails');
 
-               if(user){
+               if(!user){
                   console.log('E-mail ID is not registered');
                   return done(null,false,req.flash(('message','Invalid E-mail ID')));}
 

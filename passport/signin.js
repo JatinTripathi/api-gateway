@@ -19,7 +19,7 @@ module.exports=function(passport,logger){
                   return done(null,false,req.flash(('message','Invalid E-mail ID')));}
 
 
-               if(!isValidPassword(user,password)){
+               if(!isValidPassword(user,password,logger)){
                   console.log('Invalid Password');
                   return done(null,false,req.flash('message','Invalid Password'));}
 
@@ -31,7 +31,7 @@ module.exports=function(passport,logger){
 
 
 //===============password processing=====================//
-     var isValidPassword=function(user,password){
+     var isValidPassword=function(user,password,logger){
          logger.info('Encrypting Password');
        return bcrypt.compareSync(password,user.password);
     };

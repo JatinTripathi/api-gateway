@@ -45,7 +45,7 @@ app.use(session({
     resave:true,
     store:new mongoSession({
         mongooseConnection:mongo.connection,
-        db:'local',
+        db:'authen',
         collection:'sessions',
         autoRemove:'disabled',
     })

@@ -28,7 +28,7 @@ logger.debug("Overriding 'Express' logger");
 
 
 //==================db config=================//
-mongo.connect('mongodb://mongo:27017/authen');
+mongo.connect('mongodb://db/authen');
 
 
 
@@ -128,8 +128,8 @@ app.get('/signout',function(req,res){
 var apiProxy=proxy.createProxyServer();
 
 //=====End Points Address
-var editor='http://localhost:8081';
-var search='http://localhost:8983';
+var editor='http://editor';
+var search='http://search';
 
 //=====End Points Routing
 //Editor Microservice
@@ -138,6 +138,7 @@ app.all('/editor/*',isAuthenticated,function(req,res){
   apiProxy.web(req,res,{target:editor});
 });
 
+/*
 app.post('/publish',function(req,res,next){
   logger.info('Transferring to editor microservise for publishing');
   apiProxy.web(req,res,{target:editor});
@@ -145,6 +146,7 @@ app.post('/publish',function(req,res,next){
 }),function(req,res){
   res.redirect('/home');
 };
+*/
 
 //Search Microservice
 app.all('/search/*',isAuthenticated,function(req,res){

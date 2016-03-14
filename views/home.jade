@@ -12,11 +12,8 @@ block content
 								li Email    ---> #{user.email}
 								li First Name ---> #{user.firstName} 
 								li Last Name ---> #{user.lastName}
-						a(href='/signout', class='text-center new-account') Sign Out
-						a(href='/editor', class='text-center new-account') New Paper
-						form.form-inline(name='search',action='/search',method='post',role='form')
-							div.form-group(action='/search',method='post')
-								div.input
-									input.form-control(id='query',type='text')
-								div.actions
-									input.form-control.btn.btn-primary(id='ask',value='Search',type='button')
+						a(href='/signout', class='text-center new-account btn btn-primary') Sign Out
+						a(href='/editor', class='text-center new-account btn btn-primary') New Paper
+						form(name='search',id='search',action='/search',method='GET',role='form')
+							input(id='query',placeholder='Your Search Term',type='text',autofocus)
+							button.btn.btn-primary(id='ask',type='submit') Search

@@ -28,7 +28,7 @@ logger.debug("Overriding 'Express' logger");
 
 
 //==================db config=================//
-mongo.connect('mongodb://localhost:27017/authen');
+mongo.connect('mongodb://db/authen');
 
 
 
@@ -72,15 +72,13 @@ app.use(function(req,res,next){
 
 
 
-//================middleware(isAuthenticated)
+//================Authentication and Autherization========//
+//================middleware(isAthenticated)
 var isAuthenticated=function(req,res,next){
   if(req.isAuthenticated())
     return next();
   res.redirect('/');
 };
-
-
-
 //=================middleware(ifAthenticated)
 var ifAuthenticated=function(req,res,next){
   if(req.isAuthenticated())
@@ -138,16 +136,6 @@ app.all('/editor/*',isAuthenticated,function(req,res){
   apiProxy.web(req,res,{target:editor});
 });
 
-/*
-app.post('/publish',function(req,res,next){
-  logger.info('Transferring to editor microservise for publishing');
-  apiProxy.web(req,res,{target:editor});
-  next();
-}),function(req,res){
-  res.redirect('/home');
-};
-*/
-
 //Search Microservice
 app.all('/search/*',isAuthenticated,function(req,res){
   logger.info('Transferring To Search Microservice');
@@ -158,5 +146,7 @@ app.all('/search/*',isAuthenticated,function(req,res){
 
 //===============port config==============//
 var port=process.env.port || 8080;
-app.listen(port);
-logger.info('Server is listening at port '+port+'!');
+app.listen(port,function(){
+  logger.info('Server is listening at port '+port+'!');
+});
+

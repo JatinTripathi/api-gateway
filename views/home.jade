@@ -14,6 +14,6 @@ block content
 								li Last Name ---> #{user.lastName}
 						a(href='/signout', class='text-center new-account btn btn-primary') Sign Out
 						a(href='/editor', class='text-center new-account btn btn-primary') New Paper
-						form(name='search',id='search',action='/search',method='GET',role='form')
-							input.form-control(id='query',placeholder='Your Search Term',type='text',autofocus)
-							button.btn.btn-primary(id='ask',type='submit') Search
+						form(name='search',id='search',action='/search/:',method='GET',role='form')
+							input.form-control(id='query',name='query',placeholder='Your Search Term',type='text',autofocus)
+							input.btn.btn-primary(id='ask',name='ask',type='submit',value='Search')

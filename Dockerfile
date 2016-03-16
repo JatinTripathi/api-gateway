@@ -1,5 +1,7 @@
 FROM node:latest
 
+MAINTAINER JatinTripathi
+
 EXPOSE 8080
 
 RUN apt-get install && apt-get update

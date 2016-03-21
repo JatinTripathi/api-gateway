@@ -1,12 +1,16 @@
-FROM node:latest
+FROM node
 
 MAINTAINER JatinTripathi
 
-COPY package.json /src/package.json
-RUN cd /src; npm install --production
+RUN npm install -g nodemon
 
-COPY . /src
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install
+RUN mkdir -p /src && cp -a /temp/node_modules /src/
+
+WORKDIR /src
+ADD . /src
 
 EXPOSE 8080
 
-CMD ["node","/src/server.js"]
+CMD ["nodemon","/src/server.js"]

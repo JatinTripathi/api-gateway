@@ -44,7 +44,7 @@ mongoose.model({
 ```
 
 Then using Express.js and http-proxy libraries of Node.js, proxying rest of the HTTP request to responsible services
-I have used my other microservices as end services with this gateway
+I have used my other microservices for [Online Editor](https://github.com/JatinTripathi/editor-service) and [Search](https://github.com/JatinTripathi/search-service) as end services with this gateway
 ```javascript
 //===============Proxy Server Routing==============//
 var apiProxy=proxy.createProxyServer();

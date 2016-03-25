@@ -6,7 +6,7 @@ RUN npm install -g nodemon
 
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install
-RUN mkdir -p /src && cp -a /temp/node_modules /src/
+RUN mkdir -p /src && cp -a /tmp/node_modules /src/
 
 WORKDIR /src
 ADD . /src

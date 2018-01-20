@@ -2,11 +2,11 @@
 Working as a first layer of a microservices application, it provides initialization of user experience by authenticating and then autherizing to use other end microservices by reverse proxing all the request to appropriate services.
 Its a plain script for creating an API gateway with close to really basic UI(working on improvements). 
 
-##Prerequisites:
+## Prerequisites:
 * Docker-engine
 * Mongodb Docker Container
 
-##Built-up
+## Built-up
 Start Docker Engine and Mongo Container,
 Run
 `docker build --name <username>/api-gateway /path/to/api-gateway's/Dokerfile`
@@ -14,7 +14,7 @@ in your terminal and then,
 `docker run -it --link mongo:db <username>/api-gateway bash`
 This service will work on port 8080.
 
-##APIs
+## APIs
 This microservice communicates with clients and End-Services using HTTP RESTful API mostly GET and POST. The service consumes initial GET and POST Request to authenticate and autherize the users and then storing all the user data in Mongodb Database.
 Then for better user experience there are features like,
 * Remember Me
